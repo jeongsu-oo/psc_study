@@ -83,8 +83,6 @@ e.show()
 
 
 # 3단계
-
-
 class Member:
     def __init__(self, mem_id, nm):
         self.mem_id = mem_id
@@ -206,6 +204,95 @@ class Library:
         print(f"{member.nm} -> {book.title} 반납 완료")
 
     # 6단계
+    def list_books(self, available_only=False):
+        print(f"[{self.nm} 도서 목록]")
+        cnt = 0
+        for i in self.bks.values():
+            if available_only:
+                if i.is_available:
+                    i.show()
+                    cnt += 1
+            else:
+                i.show()
+                cnt += 1
+        print(f"총 {cnt}권")
+
+    def search(self, keyword):
+        kw = keyword.lower()
+        lst = []
+        for i in self.bks.values():
+            if kw in i.title.lower() or kw in i.author.lower():
+                lst.append(i)
+        return lst
+
+    def by_category(self):
+        dic = {}
+        for i in self.bks.values():
+            dic[i.cate] = dic.get(i.cate, 0) + 1
+        return dic
+
+    def most_borrowed(self, n=3):
+        lst = list(self.bks.values())
+        lst = sorted(lst, key=lambda x: x.loan_cnt, reverse=True)
+        return lst[:n]
+
+    # 7단계
+    def save_books(self, path):
+        with open(path, "w", encoding="utf-8", newline="") as f:
+            f.write("도서번호,제목,저자,분류,상태,누적대출\n")
+            f.writelines(
+                f"{i.bk_id},{i.title},{i.author},{i.cate},{'대출가능' if i.is_available else '대출중'},{i.loan_cnt}\n"
+                for i in self.bks.values()
+            )
+        return path
+
+    def save_history(self, path):
+        with open(path, "w", encoding="utf-8", newline="") as f:
+            f.write("구분, 회원, 도서\n")
+            f.writelines(
+                f"{i['구분']},{i['회원']},{i['도서']}\n" for i in self.loan_lst
+            )
+        return path
+
+    # 8단계
+    def load_books(self, path):
+        try:
+            with open(path, "r", encoding="utf-8", newline="") as f:
+                r = csv.reader(f)
+                h = next(r)
+                cnt = 0
+                for i in r:
+                    self.bks[i[0]] = i
+                    cnt += 1
+                return cnt
+
+        except FileNotFoundError:
+            print(f"파일이 없습니다 : {path.name}")
+            return 0
+
+    # 9단계
+    def report(self):
+        print("=" * 35)
+        print(f"{self.nm} 운영 리포트")
+        print("=" * 35)
+        print(f"도서 {len(self.bks)}권 / 회원 {len(self.mems)}명")
+        print("\n[분류별]")
+        for i, j in self.by_category().items():
+            print(f"{i} {j}권")
+        print("\n[인기 도서]")
+        cnt = 0
+        for i in self.most_borrowed(2):
+            cnt += 1
+            print(f"{cnt}. {i.title} ({i.loan_cnt}회)")
+        print("\n[회원 현황]")
+        for i in self.mems:
+            member = self.mems[i]
+            print(f"{i} {member.nm} / 대출 {len(member._bk_lst)}권")
+        print("\n[최근 기록]")
+        last_5 = self.loan_lst[-5:]
+        for i in last_5:
+            print(f"{i['구분']} {i['회원']} -> {i['도서']}")
+        print("=" * 35)
 
 
 print("\n-------- 4단계 출력 --------")
@@ -231,3 +318,32 @@ lib.borrow("M001", "E001")
 lib.borrow("M002", "E001")
 lib.give_back("M001", "B001")
 lib.give_back("M001", "B002")
+
+print("\n-------- 6단계 출력 --------")
+lib.list_books()
+print()
+lib.list_books(available_only=True)
+print()
+print("검색 '파이썬':", [b.title for b in lib.search("파이썬")])
+print("분류별:", lib.by_category())
+print("인기 도서:", [(b.title, b.loan_cnt) for b in lib.most_borrowed(2)])
+
+print("\n-------- 7단계 출력 --------")
+p1 = lib.save_books(DATA / "books.csv")
+print("저장 완료:", p1.name)
+p2 = lib.save_history(DATA / "history.csv")
+print("저장 완료:", p2.name)
+
+with open(DATA / "books.csv", "r", encoding="utf-8-sig", newline="") as f:
+    for row in csv.reader(f):
+        print(row)
+
+print("\n-------- 8단계 출력 --------")
+lib2 = Library("분관")
+print("불러온 도서:", lib2.load_books(DATA / "없는파일.csv"), "권")
+print("불러온 도서:", lib2.load_books(DATA / "books.csv"), "권")
+books, members = lib2.count()
+print("새 도서관 도서 수:", books)
+
+print("\n-------- 9단계 출력 --------")
+lib.report()
