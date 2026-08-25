@@ -66,3 +66,13 @@ print(temps)
 print("\n문제 5")
 c = np.linspace(0, 100, 6).astype("int32")
 print(c, c.dtype)
+
+deg = np.array([0, 30, 45, 60, 90])
+rad = np.deg2rad(deg)
+print(rad)
+"이것은 deg2rad()함수 >> 파이썬 삼각함수에는 이 함수를 사용해 변환해야 한다."
+
+
+temp = np.array([-3, 12, 25, 31, 8])
+print(np.where(temp >= 25, "더움", "안 더움"))
+print(np.where(temp >= 25, 1, 0))
