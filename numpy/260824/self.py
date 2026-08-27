@@ -76,3 +76,83 @@ print(rad)
 temp = np.array([-3, 12, 25, 31, 8])
 print(np.where(temp >= 25, "더움", "안 더움"))
 print(np.where(temp >= 25, 1, 0))
+
+idx = np.where(temp >= 25)
+print(idx)
+
+temps2 = np.array([[-3, 12, 25], [31, 8, 26]])
+idx2 = np.where(temps2 >= 25)
+print(idx2)
+
+score = np.array([-10, 45, 88, 120])
+print(np.clip(score, 0, 100))
+
+a = np.array([True, True, False])
+print(a.any(), a.all())
+print(np.any(score > 95), np.all(score > 20))
+
+x = np.array([1.0, 2.0, 0.0])
+with np.errstate(divide="ignore", invalid="ignore"):
+    print(1 / x)
+    print(np.array([0]) / np.array([0]))
+
+grade = np.select([score >= 90, score >= 80, score >= 70], ["A", "B", "C"], default="F")
+print(score)
+print(grade)
+
+# inf >> 무한대
+# nan >> not a number, 정의할 수 없는 값
+
+print(0.3 == 0.3)
+print(np.isclose(0.1 + 0.2, 0.3))  # 원소별
+print(np.allclose([0.1 + 0.2], [0.3]))  # 전체
+
+#
+# 연습 1
+print("연습 1")
+a = np.arange(1, 11)
+print(np.power(a, 2))
+print(a[1::2])
+
+#
+# 연습 2
+print("\n연습 2")
+sales = np.array([[120, 150, 90], [200, 180, 250], [90, 60, 130]])
+tax = np.array([0.1, 0.05, 0.2])
+print(sales * (1 + tax))
+
+#
+# 연습 3
+print("\n연습 3")
+scores = np.array([88, 45, 92, 67, 100, 30, 75])
+print(np.where(scores >= 60, "PASS", "FAIL"))
+print((scores >= 60).sum() / len(scores) * 100)
+
+#
+# 연습 4
+print("\n연습 4")
+data = np.array([12.0, -3.0, 250.0, 45.0, 900.0, 30.0])
+print(np.clip(data, 0, 100))
+print(data[(0 <= data) & (data <= 100)])
+
+#
+# 연습 5
+print("\n연습 5")
+X = np.array([[60.0, 70.0], [80.0, 90.0], [100.0, 50.0]])
+# print((X - X.min()) / (X.max() - X.min()))
+mn = X.min(axis=0)
+mx = X.max(axis=0)
+print((X - mn) / (mx - mn))
+
+m = np.arange(6).reshape(2, 3)
+print(m.ravel())  # n차원을 1차원으로 + view
+print(m.flatten())  # n차원을 1차원으로 + copy
+
+print("\n전치행렬")
+print(m)
+print(m.T)
+
+x = np.arange(24).reshape(2, 3, 4)
+print(x)
+print("transpose")
+print(x.transpose(1, 0, 2))
