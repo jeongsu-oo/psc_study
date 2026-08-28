@@ -153,6 +153,48 @@ print(m)
 print(m.T)
 
 x = np.arange(24).reshape(2, 3, 4)
-print(x)
 print("transpose")
-print(x.transpose(1, 0, 2))
+print(x)
+print(x.transpose(1, 0, 2).shape)
+
+import os
+import csv
+from pathlib import Path
+import pandas as pd
+
+rows = [
+    "측정ID,설비명,온도,진동,회전수,압력,상태",
+    "1,프레스A,72.3,0.42,1480,5.1,정상",
+    "2,절삭기C,88.1,0.71,2100,4.8,주의",
+    "3,용접기B,65.4,0.33,980,6.2,정상",
+    "4,프레스A,74.0,0.45,1495,5.0,정상",
+    "5,절삭기C,91.5,0.88,2150,4.7,이상",
+    "6,용접기B,66.1,0.35,990,6.1,정상",
+    "7,프레스A,73.2,0.44,1488,5.2,정상",
+    "8,절삭기C,89.7,0.79,2120,4.9,주의",
+    "9,용접기B,64.8,0.31,975,6.3,정상",
+    "10,프레스A,75.6,0.51,1502,4.9,주의",
+    "11,절삭기C,93.2,0.95,2180,4.6,이상",
+    "12,용접기B,67.0,0.38,1005,6.0,정상",
+    "13,프레스A,72.9,0.43,1479,5.1,정상",
+    "14,절삭기C,90.3,0.83,2135,4.8,주의",
+    "15,용접기B,65.9,0.34,988,6.2,정상",
+    "16,절삭기C,94.8,1.02,2200,4.5,이상",
+]
+BASE = Path(__file__).parent
+csv_path = BASE / "12_제조센서전처리.csv"
+
+with open(csv_path, "w", encoding="utf-8-sig") as f:
+    for row in rows:
+        f.write(row + "\n")
+print("실습 데이터 준비 완료:", csv_path.name)
+print(os.getcwd())
+
+sample = os.path.abspath("센서.csv")
+
+print(sample)
+print(os.path.dirname(sample))
+
+here = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.join(here, "12_제조센서전처리.csv")
+print(data_path)
