@@ -198,3 +198,13 @@ print(os.path.dirname(sample))
 here = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(here, "12_제조센서전처리.csv")
 print(data_path)
+
+import random
+
+random.seed(42)
+print("랜덤")
+print(random.random())
+print(random.uniform(70, 80))  # 랜덤 실수
+print(random.randint(70, 80))  # 랜덤 정수
+
+np.random.seed(42)
