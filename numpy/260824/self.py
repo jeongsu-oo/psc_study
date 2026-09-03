@@ -208,3 +208,5 @@ print(random.uniform(70, 80))  # 랜덤 실수
 print(random.randint(70, 80))  # 랜덤 정수
 
 np.random.seed(42)
+
+# 105p까지
